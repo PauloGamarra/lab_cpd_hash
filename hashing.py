@@ -1,3 +1,5 @@
+import sys
+
 
 def create_hash_table(size, chained = False):
     if(chained):
@@ -66,26 +68,17 @@ def pesquisa_chained(h_table, name, address):
     return (-1)
 
 if __name__ == '__main__':
-    size = 2
-    h_table = create_hash_table(size, True)
-    insere_chained(h_table, 'maria', h1('maria', size))
-    insere_chained(h_table, 'lucio', h1('lucio', size))
-    insere_chained(h_table, 'ricardo', h1('ricardo', size))
-    insere_chained(h_table, 'luana', h1('luana', size))
-    insere_chained(h_table, 'daives', h1('daives', size))
-    insere_chained(h_table, 'valmir', h1('valmir', size))
-    insere_chained(h_table, 'malaquias', h1('malaquias', size))
-    insere_chained(h_table, 'jaime', h1('jaime', size))
-    print(h_table)
-    print(pesquisa_chained(h_table, 'maria', h1('maria', size)))
-    print(pesquisa_chained(h_table, 'lucio', h1('lucio', size)))
-    print(pesquisa_chained(h_table, 'ricardo', h1('ricardo', size)))
-    print(pesquisa_chained(h_table, 'luana', h1('luana', size)))
-    print(pesquisa_chained(h_table, 'daives', h1('daives', size)))
-    print(pesquisa_chained(h_table, 'valmir', h1('valmir', size)))
-    print(pesquisa_chained(h_table, 'laura', h1('laura', size)))
-    print(pesquisa_chained(h_table, 'malaquias', h1('malaquias', size)))
-    print(pesquisa_chained(h_table, 'joelma', h1('joelma', size)))
-    print(pesquisa_chained(h_table, 'jaime', h1('jaime', size)))
+    size = int(sys.argv[2])
+    file_name = sys.argv[1]
 
+    with open(file_name) as file:
+        names = file.read().splitlines()
 
+    h_table = create_hash_table(size)
+
+    colisions = 0
+    for name in names:
+        colisions += (insere_quadratic(h_table, name, h1(name, size), size) - 1)
+
+    print('taxa de ocupação: {}%'.format(100*(len(names)/size)))
+    print('número de colisões: {}'.format(colisions))
