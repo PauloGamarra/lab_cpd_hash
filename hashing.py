@@ -1,5 +1,5 @@
 import sys
-
+import numpy as np
 
 def create_hash_table(size, chained = False):
     if(chained):
@@ -79,6 +79,31 @@ if __name__ == '__main__':
     colisions = 0
     for name in names:
         colisions += (insere_quadratic(h_table, name, h1(name, size), size) - 1)
-
+    print('1.2')
     print('taxa de ocupação: {}%'.format(100*(len(names)/size)))
     print('número de colisões: {}'.format(colisions))
+
+    file_name = sys.argv[3]
+    with open(file_name) as file:
+        names = file.read().splitlines()
+
+    results = []
+    encontrados = []
+    nao_encontrados = []
+    for name in names:
+        results.append(pesquisa_quadratic(h_table,name,h1(name,size),size))
+        if results[-1] == -1:
+            nao_encontrados.append(name)
+        else:
+            encontrados.append(name)
+    print('-------------------------------')
+    print('1.3')
+    print("encontrados ({}): \n{}".format(len(encontrados), encontrados))
+    print("\nnao encontrados ({}): \n{}".format(len(nao_encontrados), nao_encontrados))
+    print("\nmedia do numero de verificacoes: {}".format(np.sum(results)/len(results)))
+
+    results = dict(zip(names,results))
+    results = sorted(results.items(), key=lambda kv: kv[1])
+    results = results[len(nao_encontrados):]
+    print("nomes que geraram o menor numero de berificações: {}".format((results[:10])))
+    print("nomes que geraram o menor numero de berificações: {}".format((results[-10:])))
